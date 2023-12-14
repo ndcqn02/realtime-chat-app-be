@@ -21,7 +21,7 @@ import { Request, Response } from "express";
 import { createResponse } from "src/utils/response";
 
 // @UseGuards(RolesGuard)messageData
-@Controller("messages")
+@Controller("api/messages")
 export class MessageController {
   constructor(private readonly messageService: MessageService) {}
 

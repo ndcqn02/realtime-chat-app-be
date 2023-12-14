@@ -2,6 +2,8 @@ import { Module } from "@nestjs/common";
 import { ConfigModule } from "@nestjs/config";
 import configuration from "./config/configuration";
 import { MessageModule } from "./modules/message/message.module";
+import { AppGateway } from './app/app.gateway';
+import { EventsModule } from "./app/app.module";
 
 @Module({
   imports: [
@@ -10,6 +12,7 @@ import { MessageModule } from "./modules/message/message.module";
       load: [configuration],
     }),
     MessageModule,
+    EventsModule
   ],
   controllers: [],
   providers: [],

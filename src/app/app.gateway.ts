@@ -6,52 +6,48 @@ import {
   SubscribeMessage,
   WebSocketGateway,
   WebSocketServer,
-} from "@nestjs/websockets";
-import { Socket } from "dgram";
-import { Server } from "http";
-import { AppService } from "./app.service";
-import { IMessage } from "src/modules/message/interfaces/message.interface";
+} from '@nestjs/websockets'
+import { Socket } from 'dgram'
+import { Server } from 'http'
+import { AppService } from './app.service'
+import { IMessage } from 'src/modules/message/interfaces/message.interface'
+import messageService from 'src/modules/message/messages.service'
+import { MessageDto } from 'src/modules/message/dto/message.dto'
 
 @WebSocketGateway({
   cors: {
-    origin: "*",
+    origin: '*',
   },
 })
-
-
-export class AppGateway
-  implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect
-{
+export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
   // constructor(private appService: AppService) {}
   private appService: AppService
+  private message = messageService
 
-  @WebSocketServer() server: Server;
+  @WebSocketServer() server: Server
 
+  @SubscribeMessage('sendMessage')
+  async handleSendMessage(client: Socket, @MessageBody() data: MessageDto): Promise<void> {
+    console.log(' handleSendMessage ~ data:', data)
 
-
-
-  @SubscribeMessage("sendMessage")
-  async handleSendMessage(client: Socket, payload: IMessage, @MessageBody() data: string): Promise<void> {
-    console.log("🚀 ~ file: app.gateway.ts:30 ~ handleSendMessage ~ client:", client)
-    console.log("🚀 ~ file: app.gateway.ts:30 ~ handleSendMessage ~ payload:", payload)
-    console.log("🚀 ~ file: app.gateway.ts:30 ~ handleSendMessage ~ data:", data)
-    await this.appService.createMessage(payload);
-    this.server.emit("sendMessage", payload);
+    const result = await this.message.create(data)
+    console.log('🚀 ~ file: app.gateway.ts:48 ~ result:', result)
+    this.server.emit('sendMessage', data)
   }
 
   afterInit(server: Server) {
-    console.log("server",server );
-    //Do stuffs., 
+    // console.log("server",server );
+    //Do stuffs.,
   }
 
   handleDisconnect(client: Socket) {
-    console.log("DISCONNECTED");
+    console.log('DISCONNECTED')
     // console.log(`Disconnected: ${client.id}`);
     //Do stuffs
   }
 
   handleConnection(client: Socket, ...args: any[]) {
-    console.log("CONNECTED");
+    console.log('CONNECTED')
     // console.log(`Connected ${client.id}`);
     //Do stuffs
   }

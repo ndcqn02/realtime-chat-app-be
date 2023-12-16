@@ -5,6 +5,8 @@ import { MessageModule } from "./modules/message/message.module";
 import { AppGateway } from './app/app.gateway';
 import { EventsModule } from "./app/app.module";
 import { UserModule } from "./modules/user/user.module";
+import { PostModule } from "./modules/post/post.module";
+import { CommentModule } from "./modules/comment/comment.module";
 
 @Module({
   imports: [
@@ -15,7 +17,9 @@ import { UserModule } from "./modules/user/user.module";
     }),
     MessageModule,
     EventsModule,
-    UserModule
+    UserModule,
+    PostModule,
+    CommentModule
   ],
   controllers: [],
   providers: [],

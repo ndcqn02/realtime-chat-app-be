@@ -1,4 +1,5 @@
 import {
+  ConnectedSocket,
   MessageBody,
   OnGatewayConnection,
   OnGatewayDisconnect,
@@ -21,40 +22,38 @@ import { Socket } from 'socket.io'
   },
 })
 export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
-  // constructor(private appService: AppService) {}
-  private appService: AppService
   private message = messageService
 
   @WebSocketServer() server: Server
 
   @SubscribeMessage('sendMessage')
-  async handleSendMessage(client: Socket, @MessageBody() data: MessageDto): Promise<void> {
-    try {
-      if (data.recipientId && data.senderId) {
-        if (data.message) {
-          await this.message.create(data)
-        }
-        const chatDetail = await this.message.getChatDetail(data.recipientId, data.senderId)
+  async handleSendMessage(
+    @ConnectedSocket() client: Socket,
+    @MessageBody() data: any,
+  ): Promise<void> {
+    console.log(`Connected sendMessage ${client.id}`)
+
+    if (data.recipientId && data.senderId) {
+      if (data.message) {
+        await this.message.create(data)
+      }
+      const chatDetail = await this.message.getChatDetail(data.recipientId, data.senderId)
+      if (chatDetail) {
         this.server.emit('replyMessageRes', chatDetail)
       }
-    } catch (error) {
-      console.error('Error handling sendMessage:', error)
-      client.emit('errorMessage', { error: 'An error occurred while processing the sendMessage.' })
     }
   }
 
   @SubscribeMessage('getMessage')
-  async handleGetMessage(client: Socket, @MessageBody() data: MessageDto): Promise<void> {
-    try {
-      if (data.recipientId && data.senderId) {
-        const chatDetail = await this.message.getChatDetail(data.recipientId, data.senderId)
-        // const conversations = await this.message.getChatListUser(data.recipientId)
+  async handleGetMessage(
+    @ConnectedSocket() client: Socket,
+    @MessageBody() data: MessageDto,
+  ): Promise<void> {
+    if (data.recipientId && data.senderId) {
+      const chatDetail = await this.message.getChatDetail(data.recipientId, data.senderId)
+      // const conversations = await this.message.getChatListUser(data.recipientId)
 
-        this.server.emit('replyMessageRes', chatDetail)
-      }
-    } catch (error) {
-      console.error('Error handling getMessage:', error)
-      client.emit('errorMessage', { error: 'An error occurred while processing the getMessage.' })
+      this.server.emit('replyMessageRes', chatDetail)
     }
   }
 
@@ -73,7 +72,6 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
   async handleConnection(client: Socket, ...args: any[]) {
     console.log('CONNECTED')
     // console.log(`Connected ${client.id}`)
-
     //Do stuffs
   }
 }

@@ -15,10 +15,10 @@ export class MessageDto {
   createdAt?: Date = new Date();
 
   @IsString()
-  senderId: Schema.Types.ObjectId;
+  senderId: string;
 
   @IsString()
-  recipientId: Schema.Types.ObjectId;
+  recipientId: string;
 }
 
 

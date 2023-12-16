@@ -51,6 +51,12 @@ export class MessageController {
     return res.json(createResponse(messages))
   }
 
+  @Get('getChatListUser/:recipientId')
+  async getChatListUser(@Param('recipientId') recipientId: string, @Res() res: Response) {
+    const message = await this.service.getChatListUser(recipientId)
+    return res.json(createResponse(message))
+  }
+
   @Get('chat/:recipientId/:senderId')
   async getChatDetail(
     @Param('recipientId') recipientId: string,

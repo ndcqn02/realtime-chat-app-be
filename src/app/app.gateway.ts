@@ -35,13 +35,26 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
           await this.message.create(data)
         }
         const chatDetail = await this.message.getChatDetail(data.recipientId, data.senderId)
-        console.log(`client id sendMessage >>> ${client}`)
-
-        client.emit('messageResponse', chatDetail)
+        this.server.emit('replyMessageRes', chatDetail)
       }
     } catch (error) {
       console.error('Error handling sendMessage:', error)
-      client.emit('errorMessage', { error: 'An error occurred while processing the message.' })
+      client.emit('errorMessage', { error: 'An error occurred while processing the sendMessage.' })
+    }
+  }
+
+  @SubscribeMessage('getMessage')
+  async handleGetMessage(client: Socket, @MessageBody() data: MessageDto): Promise<void> {
+    try {
+      if (data.recipientId && data.senderId) {
+        const chatDetail = await this.message.getChatDetail(data.recipientId, data.senderId)
+        // const conversations = await this.message.getChatListUser(data.recipientId)
+
+        this.server.emit('replyMessageRes', chatDetail)
+      }
+    } catch (error) {
+      console.error('Error handling getMessage:', error)
+      client.emit('errorMessage', { error: 'An error occurred while processing the getMessage.' })
     }
   }
 
@@ -57,9 +70,10 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
     //Do stuffs
   }
 
-  handleConnection(client: Socket, ...args: any[]) {
+  async handleConnection(client: Socket, ...args: any[]) {
     console.log('CONNECTED')
-    console.log(`Connected ${client.id}`)
+    // console.log(`Connected ${client.id}`)
+
     //Do stuffs
   }
 }

@@ -91,6 +91,11 @@ export class MessageService {
       {
         $replaceRoot: { newRoot: '$newRoot2' },
       },
+      {
+        $sort: {
+          createdAt: -1,
+        },
+      },
     ])
 
     const users = await this.userService.getUserList()

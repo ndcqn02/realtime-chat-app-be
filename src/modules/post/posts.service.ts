@@ -40,7 +40,9 @@ export class PostService {
           as: 'comments',
         },
       },
+      { $sort: { createdAt: -1 } },
     ])
+    console.log("🚀 ~ file: posts.service.ts:45 ~ PostService ~ getAllPost ~ posts:", posts)
 
     const users = await this.userService.getUserList()
     // const postComments = this.addAvatarAndNameToComments(posts, users)
@@ -50,7 +52,7 @@ export class PostService {
 
   addUserToPost(users: any[], posts: any[]): any[] {
     return posts.map((post) => {
-      this.addAvatarAndNameToComments(post, users);
+      this.addAvatarAndNameToComments(post, users)
       const userPost = users.find((user) => user.id === post.creatorId)
       return {
         ...post,
@@ -61,15 +63,14 @@ export class PostService {
   }
 
   addAvatarAndNameToComments(post, listUser) {
-    post.comments.forEach(comment => {
-      const user = listUser.find(u => u.id === comment.creatorId);
+    post.comments.forEach((comment) => {
+      const user = listUser.find((u) => u.id === comment.creatorId)
       if (user) {
-        comment.avatarPath = user.imageUrl;
-        comment.name = user.fullName;
+        comment.avatarPath = user.imageUrl
+        comment.name = user.fullName
       }
-    });
+    })
   }
-  
 }
 
 const postService = new PostService()

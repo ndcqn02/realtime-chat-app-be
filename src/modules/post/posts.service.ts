@@ -30,6 +30,45 @@ export class PostService {
     return await this.model.find()
   }
 
+  async getAllPost() {
+    const posts = await this.model.aggregate([
+      {
+        $lookup: {
+          from: 'comments',
+          localField: '_id',
+          foreignField: 'postId',
+          as: 'comments',
+        },
+      },
+    ])
+
+    const users = await this.userService.getUserList()
+    // const postComments = this.addAvatarAndNameToComments(posts, users)
+    const result = this.addUserToPost(users, posts)
+    return result
+  }
+
+  addUserToPost(users: any[], posts: any[]): any[] {
+    return posts.map((post) => {
+      this.addAvatarAndNameToComments(post, users);
+      const userPost = users.find((user) => user.id === post.creatorId)
+      return {
+        ...post,
+        avatarPath: userPost.imageUrl || '',
+        name: userPost.fullName || '',
+      }
+    })
+  }
+
+  addAvatarAndNameToComments(post, listUser) {
+    post.comments.forEach(comment => {
+      const user = listUser.find(u => u.id === comment.creatorId);
+      if (user) {
+        comment.avatarPath = user.imageUrl;
+        comment.name = user.fullName;
+      }
+    });
+  }
   
 }
 

@@ -51,4 +51,10 @@ export class PostController {
     return res.json(createResponse(posts))
   }
 
+  @Get('getAllPost')
+  async getAllPost(@Res() res: Response) {
+    const posts = await this.service.getAllPost()
+    return res.json(createResponse(posts))
+  }
+
 }

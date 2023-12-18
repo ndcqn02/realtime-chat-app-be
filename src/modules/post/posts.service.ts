@@ -42,10 +42,7 @@ export class PostService {
       },
       { $sort: { createdAt: -1 } },
     ])
-    console.log("🚀 ~ file: posts.service.ts:45 ~ PostService ~ getAllPost ~ posts:", posts)
-
     const users = await this.userService.getUserList()
-    // const postComments = this.addAvatarAndNameToComments(posts, users)
     const result = this.addUserToPost(users, posts)
     return result
   }

@@ -16,7 +16,7 @@ import {
 
 import { CommentDto } from './dto/comment.dto'
 import { ObjectId } from 'mongoose'
-import { Request, Response } from 'express'
+import type { Request, Response } from 'express-serve-static-core';
 import { createResponse } from 'src/utils/response'
 import commentService from './comments.service'
 

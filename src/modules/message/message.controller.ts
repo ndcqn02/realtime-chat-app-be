@@ -16,7 +16,7 @@ import {
 
 import { MessageDto } from './dto/message.dto'
 import { ObjectId } from 'mongoose'
-import { Request, Response } from 'express'
+import type { Request, Response } from 'express-serve-static-core';
 import { createResponse } from 'src/utils/response'
 import messageService from './messages.service'
 

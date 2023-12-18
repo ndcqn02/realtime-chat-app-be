@@ -13,7 +13,7 @@ import {
   HttpStatus,
 } from '@nestjs/common'
 
-import { Request, Response } from 'express'
+import type { Request, Response } from 'express-serve-static-core';
 import { createResponse } from 'src/utils/response'
 import userService from './user.service'
 

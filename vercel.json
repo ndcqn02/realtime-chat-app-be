@@ -1,0 +1,27 @@
+{
+  "version": 2,
+  "env": {
+    "PORT": "@port",
+    "MONGODB_URI": "@mongo_uri",
+    "NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY": "@next_public_clerk_publishable",
+    "CLERK_SECRET_KEY": "@clerk_secret"
+  },
+  "builds": [
+    {
+      "src": "src/main.ts",
+      "use": "@vercel/node"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "src/main.ts",
+      "methods": [
+        "GET",
+        "POST",
+        "PUT",
+        "DELETE"
+      ]
+    }
+  ]
+}

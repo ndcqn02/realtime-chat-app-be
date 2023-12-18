@@ -1,20 +1,24 @@
-import { IsDate, IsString } from 'class-validator';
+import { IsDate, IsOptional, IsString } from 'class-validator';
 import Schema from 'mongoose';
 
 
 export class MessageDto {
+  @IsOptional()
   @IsString()
   _id?: Schema.Types.ObjectId;
 
   @IsString()
-  message: number;
+  message: string;
 
   @IsDate()
-  createdAt: Date = new Date();
+  @IsOptional()
+  createdAt?: Date = new Date();
 
   @IsString()
-  // userId: { type: Schema.Types.ObjectId };
-  userId: string;
+  senderId: string;
+
+  @IsString()
+  recipientId: string;
 }
 
 
